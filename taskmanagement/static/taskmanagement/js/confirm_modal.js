@@ -1,34 +1,33 @@
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("confirmModal");
-  const confirmMessage = document.getElementById("confirmMessage");
-  const confirmForm = document.getElementById("confirmForm");
-  const cancelBtn = document.getElementById("cancelBtn");
+  const msg = document.getElementById("confirmMessage");
+  const form = document.getElementById("confirmForm");
+  const cancel = document.getElementById("cancelBtn");
+  const confirmBtn = document.getElementById("confirmBtn");
 
-  function openModal(message, actionUrl) {
-    confirmMessage.textContent = message;
-    confirmForm.action = actionUrl;
+  function openModal({ actionUrl, message, confirmText }) {
+    msg.textContent = message || "Are you sure?";
+    form.action = actionUrl || "";
+    confirmBtn.textContent = confirmText || "Confirm";
     modal.style.display = "block";
   }
 
   function closeModal() {
     modal.style.display = "none";
-    confirmForm.action = "";
+    form.action = "";
   }
 
-  document.querySelectorAll(".delete-link").forEach(link => {
-    link.addEventListener("click", (e) => {
+  document.querySelectorAll(".js-confirm").forEach(el => {
+    el.addEventListener("click", (e) => {
       e.preventDefault();
-
-      const url = link.dataset.deleteUrl;
-      const title = link.dataset.taskTitle;
-
-      openModal(`Are you sure you want to delete: ${title}?`, url);
+      openModal({
+        actionUrl: el.dataset.actionUrl,
+        message: el.dataset.message,
+        confirmText: el.dataset.confirmText,
+      });
     });
   });
 
-  cancelBtn.addEventListener("click", closeModal);
-
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-  });
+  cancel.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
 });
