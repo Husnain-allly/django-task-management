@@ -1,3 +1,4 @@
+    {% load static %}
 <!doctype html>
 <html>
 <head>
@@ -14,11 +15,34 @@
         <strong>{{ task.title }}</strong> — {{ task.get_status_display }}
         {% if task.due_date %}(Due: {{ task.due_date }}){% endif %}
         | <a href="{% url 'tasks:update' task.pk %}">Edit</a>
-        | <a href="{% url 'tasks:delete' task.pk %}">Delete</a>
+        | <a href="#"
+   class="delete-link"
+   data-delete-url="{% url 'tasks:delete' task.pk %}"
+   data-task-title="{{ task.title|escape }}">
+  Delete
+</a>
+
       </li>
     {% empty %}
       <li>No tasks yet.</li>
     {% endfor %}
   </ul>
+  <!-- Generic Confirm Modal -->
+<div id="confirmModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5);">
+  <div style="background:#fff; width:90%; max-width:420px; margin:120px auto; padding:16px; border-radius:8px;">
+    <h2 style="margin:0 0 10px;">Confirm</h2>
+
+    <p id="confirmMessage" style="margin:0 0 16px;">
+      Are you sure?
+    </p>
+
+    <form id="confirmForm" method="post" action="">
+      {% csrf_token %}
+      <button type="button" id="cancelBtn">Cancel</button>
+      <button type="submit" id="confirmBtn">Yes, delete</button>
+    </form>
+  </div>
+</div>
+ <script src="{% static 'taskmanagement/js/confirm_modal.js' %}"></script>
 </body>
 </html>
