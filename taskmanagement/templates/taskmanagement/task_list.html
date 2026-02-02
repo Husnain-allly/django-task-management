@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+  <title>Tasks</title>
+</head>
+<body>
+  <h1>Tasks</h1>
+
+  <p><a href="{% url 'tasks:create' %}">+ Create Task</a></p>
+
+  <ul>
+    {% for task in tasks %}
+      <li>
+        <strong>{{ task.title }}</strong> — {{ task.get_status_display }}
+        {% if task.due_date %}(Due: {{ task.due_date }}){% endif %}
+        | <a href="{% url 'tasks:update' task.pk %}">Edit</a>
+        | <a href="{% url 'tasks:delete' task.pk %}">Delete</a>
+      </li>
+    {% empty %}
+      <li>No tasks yet.</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
