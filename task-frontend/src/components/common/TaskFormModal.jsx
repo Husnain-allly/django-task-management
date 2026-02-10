@@ -8,22 +8,21 @@ const STATUS_OPTIONS = [
 
 export default function TaskFormModal({
   open,
-  mode, // "create" | "edit"
-  initialTask, // task object when editing, null when creating
+  mode,
+  initialTask,
   loading,
   onClose,
-  onSubmit, // (payload) => Promise<void>
+  onSubmit,
 }) {
   const isEdit = mode === "edit";
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("todo");
-  const [dueDate, setDueDate] = useState(""); // YYYY-MM-DD
+  const [dueDate, setDueDate] = useState(""); 
   const [archived, setArchived] = useState(false);
   const [localError, setLocalError] = useState("");
 
-  // Prefill when opening
   useEffect(() => {
     if (!open) return;
 
@@ -33,7 +32,7 @@ export default function TaskFormModal({
       setTitle(initialTask.title ?? "");
       setDescription(initialTask.description ?? "");
       setStatus(initialTask.status ?? "todo");
-      setDueDate(initialTask.due_date ?? ""); // should already be YYYY-MM-DD
+      setDueDate(initialTask.due_date ?? "");
       setArchived(Boolean(initialTask.is_archived));
     } else {
       // create defaults
@@ -61,7 +60,7 @@ export default function TaskFormModal({
       title: trimmed,
       description: description || "",
       status,
-      due_date: dueDate || null, // ✅ DRF accepts null
+      due_date: dueDate || null,
       is_archived: archived,
     };
 

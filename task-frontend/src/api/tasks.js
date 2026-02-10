@@ -1,4 +1,4 @@
-const API_BASE = "http://127.0.0.1:8000";
+import { apiFetch } from "./client";
 
 async function handleJson(res, fallbackMessage) {
   if (!res.ok) {
@@ -6,46 +6,44 @@ async function handleJson(res, fallbackMessage) {
     try {
       const data = await res.json();
       detail = JSON.stringify(data);
-    } catch {
-      // ignore
-    }
+    } catch {}
     throw new Error(detail || fallbackMessage);
   }
   if (res.status === 204) return null;
-  return await res.json();
+  return res.json();
 }
 
 export async function fetchTasks() {
-  const res = await fetch(`${API_BASE}/api/tasks/`);
-  const data = await handleJson(res, "Failed to fetch tasks");
-  return data; // should be an array
+  const res = await apiFetch("/api/tasks/");
+  return handleJson(res, "Failed to fetch tasks");
 }
 
 export async function createTask(payload) {
-  const res = await fetch(`${API_BASE}/api/tasks/`, {
+  const res = await apiFetch("/api/tasks/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
-  return await handleJson(res, "Failed to create task");
+  return handleJson(res, "Failed to create task");
+}
+
+export async function updateTask(id, payload) {
+  const res = await apiFetch(`/api/tasks/${id}/`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return handleJson(res, "Failed to update task");
 }
 
 export async function deleteTask(id) {
-  const res = await fetch(`${API_BASE}/api/tasks/${id}/`, {
+  const res = await apiFetch(`/api/tasks/${id}/`, {
     method: "DELETE",
   });
   await handleJson(res, "Failed to delete task");
   return true;
 }
 
-export async function updateTask(id, payload) {
-  const res = await fetch(`${API_BASE}/api/tasks/${id}/`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  return await handleJson(res, "Failed to update task");
-}
 
 export async function archiveTask(id) {
   return updateTask(id, { is_archived: true });
