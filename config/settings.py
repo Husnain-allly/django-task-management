@@ -52,14 +52,27 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
+    "http://localhost:5173","http://127.0.0.1:3000"
 ]
 
+CORS_ALLOW_CREDENTIALS = True
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173","http://127.0.0.1:3000"
+]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
+
+AUTH_USER_MODEL = 'auth.User'
 ROOT_URLCONF = 'config.urls'
-STATIC_URL = "/static/"
 
 TEMPLATES = [
     {
@@ -130,3 +143,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SESSION_COOKIE_SECURE = False  # Only set to True if you're using HTTPS
+CSRF_COOKIE_SECURE = False  # Only set to True if you're using HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'  # For cross-origin requests
+CSRF_COOKIE_SAMESITE = 'Lax'  # For CSRF token
